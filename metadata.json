@@ -1,0 +1,6 @@
+{
+  "name": "Media Scaffolding Menulis Teks LHO Kelas X",
+  "description": "Media pembelajaran interaktif scaffolding menulis teks Laporan Hasil Observasi (LHO) untuk siswa Kelas X (Penelitian Tindakan Kelas).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

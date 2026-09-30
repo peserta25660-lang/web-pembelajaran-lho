@@ -52,7 +52,7 @@ export interface ParagraphData {
 }
 
 interface QuestionScaffold {
-  id: string;
+  id: keyof ObservationData;
   field: keyof ObservationData;
   questionNumber: string;
   question: string;
@@ -60,6 +60,9 @@ interface QuestionScaffold {
   placeholder: string;
   sentencePrompt: string;
   sentenceSuggestion: string;
+  hints: string[];
+  example: string;
+  sentenceRule: string;
 }
 
 // ==========================================
@@ -75,6 +78,12 @@ const PERNYATAAN_UMUM_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Laboratorium Komputer Multimedia SMA Negeri 1',
     sentencePrompt: 'Kalimat subjek pengamatan',
     sentenceSuggestion: 'Objek yang diobservasi adalah Laboratorium Komputer Multimedia.',
+    hints: [
+      'Pilih fasilitas nyata di lingkungan sekolah yang mudah diakses dan diamati langsung.',
+      'Gunakan nama resmi atau sebutan baku objek tersebut di sekolahmu.'
+    ],
+    example: 'Laboratorium Komputer Multimedia SMA Negeri 1',
+    sentenceRule: 'Gunakan frasa pembuka yang lugas. Hindari kata opini subjektif seperti "sangat keren".'
   },
   {
     id: 'pu_kategori',
@@ -85,6 +94,12 @@ const PERNYATAAN_UMUM_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Fasilitas sarana prasarana penunjang pembelajaran TIK dan multimedia',
     sentencePrompt: 'Kalimat klasifikasi / pengelompokan',
     sentenceSuggestion: 'Fasilitas ini termasuk dalam sarana penunjang utama pembelajaran TIK.',
+    hints: [
+      'Hubungkan fungsi umum objek dengan kegiatan akademis di sekolah.',
+      'Gunakan istilah pengelompokan baku (sarana prasarana, fasilitas sanitasi, ruang literasi, dll.).'
+    ],
+    example: 'Sarana prasarana penunjang pembelajaran teknologi informasi dan multimedia.',
+    sentenceRule: 'Gunakan kata kerja klasifikasi seperti "termasuk ke dalam", "tergolong", atau "diklasifikasikan sebagai".'
   },
   {
     id: 'pu_lokasi',
@@ -95,6 +110,12 @@ const PERNYATAAN_UMUM_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Gedung Sayap Barat Lantai 2, bersebelahan dengan Ruang Server',
     sentencePrompt: 'Kalimat keterangan lokasi',
     sentenceSuggestion: 'Laboratorium ini berlokasi di Gedung Sayap Barat Lantai 2 sekolah.',
+    hints: [
+      'Sebutkan patokan lantai, sayap gedung, atau ruangan penting di sekitarnya.',
+      'Perhatikan penulisan kata depan "di" yang menunjukkan tempat harus dipisah (di gedung, di lantai).'
+    ],
+    example: 'Gedung Sayap Barat Lantai 2, bersebelahan dengan Ruang Server sekolah.',
+    sentenceRule: 'Awali keterangan tempat secara spesifik dan pastikan kata depan "di" ditulis terpisah.'
   },
   {
     id: 'pu_waktu',
@@ -105,6 +126,12 @@ const PERNYATAAN_UMUM_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Hari Selasa, 10 September pukul 09.30 WIB saat jam praktik',
     sentencePrompt: 'Kalimat waktu kegiatan',
     sentenceSuggestion: 'Pengamatan dilaksanakan pada hari Selasa saat jam pembelajaran berlangsung.',
+    hints: [
+      'Teks LHO harus berbasis fakta waktu nyata agar data empiris terpercaya.',
+      'Gunakan format baku hari, tanggal, dan perkiraan waktu pelaksanaan.'
+    ],
+    example: 'Hari Selasa, 10 September 2026 pukul 09.30 WIB saat jam praktik.',
+    sentenceRule: 'Gunakan keterangan waktu untuk membuktikan bahwa kegiatan pengamatan dilakukan secara faktual.'
   },
   {
     id: 'pu_definisi',
@@ -115,6 +142,12 @@ const PERNYATAAN_UMUM_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Laboratorium Komputer adalah ruang khusus yang dilengkapi perangkat komputasi modern untuk menunjang literasi digital peserta didik.',
     sentencePrompt: 'Kalimat definisi nominal/kopula',
     sentenceSuggestion: 'Laboratorium Komputer merupakan ruang penunjang yang dilengkapi perangkat komputasi untuk literasi digital siswa.',
+    hints: [
+      'Wajib memuat kata verba kopula baku: "adalah", "merupakan", atau "ialah".',
+      'Jelaskan hakikat umum objek secara konseptual dan bebas dari opini pribadi.'
+    ],
+    example: 'Laboratorium Komputer adalah ruang edukasi khusus yang dilengkapi sarana komputasi untuk menunjang literasi digital siswa.',
+    sentenceRule: 'Struktur baku definisi: Subjek + Kopula (adalah/merupakan) + Predikat Konseptual Pembatas.'
   },
 ];
 
@@ -128,6 +161,12 @@ const DESKRIPSI_DETAIL_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Ruangan berukuran 9 x 8 meter dengan kapasitas 36 unit komputer dan meja modular berderet rapi',
     sentencePrompt: 'Kalimat ukuran dan bentuk',
     sentenceSuggestion: 'Ruangan ini memiliki luas sekitar 72 meter persegi dengan kapasitas 36 unit meja berderet rapi.',
+    hints: [
+      'Gunakan satuan ukur empiris (meter, unit, buah) atau perkiraan terukur.',
+      'Hindari kata berlebihan seperti "luas banget", gunakan perkiraan ukuran faktual.'
+    ],
+    example: 'Ruangan berukuran 9 x 8 meter dengan kapasitas 36 unit meja komputer modular berderet rapi.',
+    sentenceRule: 'Gunakan frasa pemerian dimensi fisik terukur untuk memperkuat sifat ilmiah teks laporan.'
   },
   {
     id: 'db_bahanMaterial',
@@ -138,6 +177,12 @@ const DESKRIPSI_DETAIL_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Komputer desktop prosesor Intel Core i5, monitor LCD 22 inci, serta pendingin AC ganda',
     sentencePrompt: 'Kalimat bahan dan spesifikasi',
     sentenceSuggestion: 'Setiap unit komputer dilengkapi monitor LCD 22 inci serta didukung pendingin udara ruangan ganda.',
+    hints: [
+      'Amati material penyusun (keramik, kayu lapis, besi cor, kaca tempered) atau spesifikasi alat.',
+      'Sebutkan minimal dua material atau perangkat penting.'
+    ],
+    example: 'Meja komputer berbahan kayu lapis berangka besi kokoh serta lantai berlapis keramik putih bersih.',
+    sentenceRule: 'Rangkai dengan frasa "terbuat dari", "berbahan dasar", atau "dilapisi".'
   },
   {
     id: 'db_komponen',
@@ -148,6 +193,12 @@ const DESKRIPSI_DETAIL_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Proyektor digital interaktif, server mini, akses Wi-Fi berkecepatan tinggi, dan lemari penyimpanan',
     sentencePrompt: 'Kalimat rincian bagian',
     sentenceSuggestion: 'Fasilitas pendukung di dalamnya meliputi proyektor LCD interaktif, papan tulis, serta jaringan internet kabel.',
+    hints: [
+      'Rincikan fasilitas secara berurutan (dari bagian depan ruangan ke belakang).',
+      'Kelompokkan fasilitas utama (komputer) dan pendukung (proyektor, router, printer).'
+    ],
+    example: '36 unit komputer desktop, 1 proyektor LCD interaktif, panel sakelar LAN, dan papan tulis.',
+    sentenceRule: 'Gunakan tanda baca koma (,) sebelum konjungsi "dan/serta" pada pemerian tiga unsur atau lebih.'
   },
   {
     id: 'db_warnaTataLetak',
@@ -158,6 +209,12 @@ const DESKRIPSI_DETAIL_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Dinding dicat putih bersih berpadu abu muda, pencahayaan terang alami dari jendela kaca besar',
     sentencePrompt: 'Kalimat estetika dan tata letak',
     sentenceSuggestion: 'Dinding ruangan didominasi warna putih bersih dengan sirkulasi cahaya alami yang memadai.',
+    hints: [
+      'Sebutkan warna nyata yang terlihat pada dinding dan perabot.',
+      'Gambarkan susunan meja/kursi (berjajar ke depan, berbentuk U, atau melingkar).'
+    ],
+    example: 'Dinding ruangan dicat putih bersih berpadu abu muda, dengan formasi meja berderet menghadap ke layar proyektor.',
+    sentenceRule: 'Gabungkan aspek warna dan tata letak dalam kalimat majemuk setara yang harmonis.'
   },
   {
     id: 'db_kondisi',
@@ -168,6 +225,12 @@ const DESKRIPSI_DETAIL_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Ruangan sangat higienis, bebas debu, lantai berlantai granit bersih, dan kabel tertata rapi di conduit',
     sentencePrompt: 'Kalimat kondisi keterawatan',
     sentenceSuggestion: 'Secara keseluruhan ruangan sangat bersih, berlantai granit higienis, dan kabel data tertata aman.',
+    hints: [
+      'Periksa apakah perangkat berfungsi dengan normal saat diamati.',
+      'Catat aspek kebersihan lantai, keteraturan instalasi kabel, dan kenyamanan sirkulasi udara.'
+    ],
+    example: 'Kondisi ruangan sangat bersih, bebas debu, pendingin udara berfungsi prima, dan pengabelan tertata di dalam conduit.',
+    sentenceRule: 'Gunakan verba deskriptif keadaan seperti "berfungsi secara optimal" atau "terpelihara dengan baik".'
   },
 ];
 
@@ -181,6 +244,12 @@ const DESKRIPSI_MANFAAT_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Membantu siswa mempraktikkan pemrograman, desain grafis, riset internet, serta asesmen digital',
     sentencePrompt: 'Kalimat fungsi edukatif',
     sentenceSuggestion: 'Fasilitas ini memberikan manfaat langsung bagi siswa dalam praktikum informatika dan riset mandiri.',
+    hints: [
+      'Fokus pada aktivitas nyata siswa (praktikum komputasi, riset materi pelajaran, pengerjaan tugas proyek).',
+      'Jelaskan dampak positif fasilitas ini terhadap keterampilan teknis siswa.'
+    ],
+    example: 'Membantu siswa mempraktikkan pemrograman, desain grafis, riset materi daring, serta asesmen digital.',
+    sentenceRule: 'Gunakan frasa "berfungsi untuk", "bermanfaat dalam", atau "berguna bagi".'
   },
   {
     id: 'dm_manfaatSekolah',
@@ -191,6 +260,12 @@ const DESKRIPSI_MANFAAT_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Menjadi sarana sentral Asesmen Nasional Berbasis Komputer (ANBK) dan uji sertifikasi kejuruan',
     sentencePrompt: 'Kalimat peran institusi',
     sentenceSuggestion: 'Bagi sekolah, laboratorium ini berperan sebagai pusat pelaksanaan Asesmen Nasional (ANBK).',
+    hints: [
+      'Kaitkan dengan kegiatan berskala sekolah (ANBK, uji sertifikasi, pelatihan guru, olimpiade sains).',
+      'Jelaskan bagaimana fasilitas ini mengangkat mutu akreditasi atau teknologi sekolah.'
+    ],
+    example: 'Menjadi sarana sentral Asesmen Nasional Berbasis Komputer (ANBK) serta pelatihan digital guru.',
+    sentenceRule: 'Gunakan konjungsi antarkalimat penambahan seperti "Di samping itu," atau "Selain itu,".'
   },
   {
     id: 'dm_kesimpulanSaran',
@@ -201,6 +276,12 @@ const DESKRIPSI_MANFAAT_QUESTIONS: QuestionScaffold[] = [
     placeholder: 'Contoh: Fasilitas ini sangat vital sehingga pemeliharaan berkala perangkat keras perlu dilakukan berkelanjutan',
     sentencePrompt: 'Kalimat simpulan dan saran',
     sentenceSuggestion: 'Keberadaan fasilitas ini sangat krusial sehingga pemeliharaan berkala wajib dijaga bersama.',
+    hints: [
+      'Tuliskan simpulan objektif mengenai peran fasilitas tersebut di sekolah.',
+      'Sertakan ajakan faktual untuk mematuhi tata tertib dan merawat fasilitas bersama-sama.'
+    ],
+    example: 'Fasilitas ini sangat vital sehingga pemeliharaan berkala perangkat dan disiplin tata tertib wajib dijaga bersama.',
+    sentenceRule: 'Awali kalimat penutup dengan frasa simpulan seperti "Dengan demikian," atau "Secara keseluruhan,".'
   },
 ];
 
@@ -351,6 +432,42 @@ function SvgIcon({ name, className = 'w-4 h-4' }: { name: string; className?: st
           <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
       );
+    case 'chevron-down':
+      return (
+        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      );
+    case 'chevron-up':
+      return (
+        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+      );
+    case 'info':
+      return (
+        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      );
+    case 'check-circle':
+      return (
+        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      );
+    case 'lightbulb':
+      return (
+        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+      );
+    case 'filter':
+      return (
+        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+        </svg>
+      );
     default:
       return null;
   }
@@ -433,6 +550,102 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Scaffolding & Tips States
+  const [openHints, setOpenHints] = useState<Record<string, boolean>>({
+    pu_namaObjek: true,
+    db_ciriFisik: true,
+    dm_fungsiSiswa: true,
+  });
+  const [tab2Category, setTab2Category] = useState<'all' | 'pu' | 'db' | 'dm'>('all');
+  const [copiedSentenceId, setCopiedSentenceId] = useState<string | null>(null);
+  const [copiedChip, setCopiedChip] = useState<string | null>(null);
+
+  const toggleHint = (id: string) => {
+    setOpenHints((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const allHintsOpen = [...PERNYATAAN_UMUM_QUESTIONS, ...DESKRIPSI_DETAIL_QUESTIONS, ...DESKRIPSI_MANFAAT_QUESTIONS].every(
+    (q) => !!openHints[q.id]
+  );
+
+  const toggleAllHints = () => {
+    const newState = !allHintsOpen;
+    const updated: Record<string, boolean> = {};
+    [...PERNYATAAN_UMUM_QUESTIONS, ...DESKRIPSI_DETAIL_QUESTIONS, ...DESKRIPSI_MANFAAT_QUESTIONS].forEach((q) => {
+      updated[q.id] = newState;
+    });
+    setOpenHints(updated);
+  };
+
+  // Helper Cek Kualitas Kalimat Otomatis (Live Grammar Quality Indicator)
+  const checkSentenceQuality = (text: string) => {
+    if (!text || text.trim().length === 0) {
+      return { isClean: false, startsCap: false, endsDot: false, noBadConjunction: true, lengthOk: false };
+    }
+    const trimmed = text.trim();
+    const startsCap = /^[A-Z0-9"']/.test(trimmed);
+    const endsDot = /[.!?]$/.test(trimmed);
+    const lengthOk = trimmed.length >= 15;
+
+    const lowerFirstWord = trimmed.split(/\s+/)[0]?.toLowerCase().replace(/[^a-z]/g, '') || '';
+    const badStarters = ['dan', 'sehingga', 'karena', 'tetapi', 'sedangkan', 'atau'];
+    const noBadConjunction = !badStarters.includes(lowerFirstWord);
+
+    const isClean = startsCap && endsDot && lengthOk && noBadConjunction;
+    return { isClean, startsCap, endsDot, noBadConjunction, lengthOk };
+  };
+
+  // Salin Draf Mentah ke Kolom Suntingan
+  const copyRawToSentence = (field: keyof SentenceRepairData, rawValue: string) => {
+    if (!rawValue) return;
+    setSentences((prev) => ({ ...prev, [field]: rawValue }));
+    setCopiedSentenceId(field);
+    setTimeout(() => setCopiedSentenceId(null), 1500);
+  };
+
+  // Salin Semua Draf Mentah ke Kolom Suntingan
+  const handleSyncAllFromRaw = () => {
+    setSentences((prev) => {
+      const next = { ...prev };
+      (Object.keys(observation) as (keyof ObservationData)[]).forEach((key) => {
+        if (!next[key] && observation[key]) {
+          next[key] = observation[key];
+        }
+      });
+      return next;
+    });
+  };
+
+  // Terapkan Pola Kalimat Efektif Cerdas
+  const applySmartScaffold = (q: QuestionScaffold) => {
+    const raw = observation[q.field] ? observation[q.field].trim() : '';
+    let text = q.sentenceSuggestion;
+    if (raw) {
+      if (q.id === 'pu_namaObjek') {
+        text = `${raw} merupakan salah satu fasilitas penting yang ada di lingkungan sekolah kami.`;
+      } else if (q.id === 'pu_kategori') {
+        text = `Fasilitas ini tergolong ke dalam ${raw.toLowerCase().startsWith('sarana') || raw.toLowerCase().startsWith('fasilitas') ? raw : 'kategori ' + raw}.`;
+      } else if (q.id === 'pu_lokasi') {
+        const cleanLoc = raw.replace(/^di\s+/i, '');
+        text = `Fasilitas ini berlokasi di ${cleanLoc}.`;
+      } else if (q.id === 'pu_waktu') {
+        const cleanTime = raw.replace(/^pada\s+/i, '');
+        text = `Kegiatan pengamatan dilaksanakan secara langsung pada ${cleanTime}.`;
+      } else if (q.id === 'pu_definisi') {
+        text = raw.includes('adalah') || raw.includes('merupakan') 
+          ? (raw.endsWith('.') ? raw : `${raw}.`)
+          : `${observation.pu_namaObjek || 'Objek ini'} adalah ${raw}.`;
+      } else {
+        text = raw.endsWith('.') ? raw : `${raw}.`;
+      }
+    }
+    setSentences((prev) => ({ ...prev, [q.field]: text }));
+  };
+
+  // Progres Observasi
+  const answeredObsCount = Object.values(observation).filter((v) => v && v.trim().length > 0).length;
+  const obsProgressPercent = Math.round((answeredObsCount / 13) * 100);
+
   // Auto-save LocalStorage
   useEffect(() => {
     try {
@@ -509,6 +722,19 @@ export default function App() {
       sentences.dm_kesimpulanSaran || observation.dm_kesimpulanSaran ? `Sebagai simpulan, ${sentences.dm_kesimpulanSaran || observation.dm_kesimpulanSaran}.` : ''
     ].filter(Boolean).join(' ');
     setParagraphs(prev => ({ ...prev, paragrafDeskripsiManfaat: p3 }));
+  };
+
+  const handleRangkaiSemuaParagraf = () => {
+    handleRangkaiPernyataanUmum();
+    handleRangkaiDeskripsiBagian();
+    handleRangkaiDeskripsiManfaat();
+    if (!paragraphs.judul && (observation.pu_namaObjek || sentences.pu_namaObjek)) {
+      const objName = (observation.pu_namaObjek || sentences.pu_namaObjek).toUpperCase();
+      setParagraphs(prev => ({
+        ...prev,
+        judul: prev.judul || `LAPORAN HASIL OBSERVASI ${objName}`
+      }));
+    }
   };
 
   // Safe Browser Print (Aman di HP Android/iOS)
@@ -836,6 +1062,32 @@ ${paragraphs.paragrafDeskripsiManfaat || '-'}
               </div>
             </div>
 
+            {/* Progress Bar & Toggle Tips */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-1 flex-1">
+                  <div className="flex items-center justify-between text-xs text-slate-600 mb-1">
+                    <span className="font-semibold text-slate-700">Progres Pengisian Lembar Observasi</span>
+                    <span className="font-bold text-emerald-700">{answeredObsCount} dari 13 Soal ({obsProgressPercent}%)</span>
+                  </div>
+                  <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-emerald-600 rounded-full transition-all duration-300"
+                      style={{ width: `${obsProgressPercent}%` }}
+                    />
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={toggleAllHints}
+                  className="self-start sm:self-center shrink-0 px-3.5 py-2 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs transition-colors flex items-center gap-1.5"
+                >
+                  <SvgIcon name="lightbulb" className="w-3.5 h-3.5 text-amber-500" />
+                  <span>{allHintsOpen ? 'Tutup Semua Tips' : 'Buka Semua Tips (13 Soal)'}</span>
+                </button>
+              </div>
+            </div>
+
             {/* Bagian 1: Pernyataan Umum */}
             <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-2xs space-y-4">
               <div className="border-b border-slate-100 pb-2">
@@ -847,24 +1099,106 @@ ${paragraphs.paragrafDeskripsiManfaat || '-'}
                 </h3>
               </div>
               <div className="space-y-4">
-                {PERNYATAAN_UMUM_QUESTIONS.map((q) => (
-                  <div key={q.id} className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-emerald-800 bg-white px-2 py-0.5 rounded-md border border-slate-200">
-                        {q.questionNumber}
-                      </span>
+                {PERNYATAAN_UMUM_QUESTIONS.map((q) => {
+                  const isFilled = (observation[q.field] || '').trim().length > 0;
+                  const isHintOpen = !!openHints[q.id];
+                  const charLength = (observation[q.field] || '').length;
+
+                  return (
+                    <div
+                      key={q.id}
+                      className={`p-4 sm:p-5 rounded-2xl transition-all border ${
+                        isFilled ? 'bg-white border-emerald-300 ring-1 ring-emerald-100 shadow-2xs' : 'bg-slate-50/90 border-slate-200'
+                      }`}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${
+                            isFilled ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-white text-slate-700 border-slate-200'
+                          }`}>
+                            {q.questionNumber}
+                          </span>
+                          {isFilled && (
+                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                              <SvgIcon name="check" className="w-3 h-3 text-emerald-600" /> Terisi
+                            </span>
+                          )}
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => toggleHint(q.id)}
+                          className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1.5 border ${
+                            isHintOpen 
+                              ? 'bg-emerald-100 text-emerald-900 border-emerald-300' 
+                              : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border-emerald-200/80'
+                          }`}
+                        >
+                          <SvgIcon name="lightbulb" className="w-3.5 h-3.5 text-amber-500" />
+                          <span>{isHintOpen ? 'Tutup Tips' : 'Tips Scaffolding'}</span>
+                          <SvgIcon name={isHintOpen ? 'chevron-up' : 'chevron-down'} className="w-3 h-3 text-slate-500" />
+                        </button>
+                      </div>
+
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-800 mb-1">{q.question}</h4>
+                      <p className="text-[11px] text-slate-500 mb-3">{q.subGuide}</p>
+
+                      {/* Box Scaffolding / Tips */}
+                      {isHintOpen && (
+                        <div className="mb-3.5 p-3.5 rounded-xl bg-emerald-50/90 border border-emerald-200 text-xs space-y-2.5">
+                          <div>
+                            <div className="flex items-center gap-1.5 font-bold text-emerald-900 mb-1">
+                              <SvgIcon name="info" className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                              <span>Petunjuk Observasi Lapangan:</span>
+                            </div>
+                            <ul className="list-disc list-inside space-y-0.5 text-emerald-900/90 pl-1 text-[11px]">
+                              {q.hints.map((hint, idx) => (
+                                <li key={idx}>{hint}</li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div className="pt-2 border-t border-emerald-200/70">
+                            <span className="font-bold text-emerald-950 block text-[11px] mb-0.5">🔍 Contoh Fakta Lapangan:</span>
+                            <p className="text-slate-800 italic bg-white/80 p-2 rounded-lg border border-emerald-100 text-[11px]">
+                              "{q.example}"
+                            </p>
+                          </div>
+
+                          <div className="pt-2 border-t border-emerald-200/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                              <span className="font-bold text-emerald-950 block text-[11px] mb-0.5">✍️ Panduan Menulis Awal:</span>
+                              <p className="text-emerald-900 text-[11px]">
+                                {q.sentenceRule}
+                              </p>
+                            </div>
+                            {!observation[q.field] && (
+                              <button
+                                type="button"
+                                onClick={() => setObservation(prev => ({ ...prev, [q.field]: q.example }))}
+                                className="self-start sm:self-center shrink-0 text-[11px] font-medium text-emerald-700 hover:text-emerald-800 underline bg-white/90 px-2 py-1 rounded-md border border-emerald-200"
+                              >
+                                Gunakan Contoh
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Textarea */}
+                      <textarea
+                        rows={2}
+                        value={observation[q.field]}
+                        onChange={(e) => setObservation({ ...observation, [q.field]: e.target.value })}
+                        placeholder={q.placeholder}
+                        className="w-full p-2.5 text-xs sm:text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-400 resize-y"
+                      />
+                      <div className="flex justify-end items-center mt-1 px-1 text-[10px] text-slate-400">
+                        <span>{charLength > 0 ? `${charLength} karakter` : 'Belum diisi'}</span>
+                      </div>
                     </div>
-                    <p className="text-xs sm:text-sm font-semibold text-slate-800">{q.question}</p>
-                    <p className="text-[11px] text-slate-500 italic">{q.subGuide}</p>
-                    <textarea
-                      rows={2}
-                      value={observation[q.field]}
-                      onChange={(e) => setObservation({ ...observation, [q.field]: e.target.value })}
-                      placeholder={q.placeholder}
-                      className="w-full p-2.5 text-xs sm:text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-400"
-                    />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
@@ -879,22 +1213,106 @@ ${paragraphs.paragrafDeskripsiManfaat || '-'}
                 </h3>
               </div>
               <div className="space-y-4">
-                {DESKRIPSI_DETAIL_QUESTIONS.map((q) => (
-                  <div key={q.id} className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 space-y-1.5">
-                    <span className="text-[11px] font-bold text-emerald-800 bg-white px-2 py-0.5 rounded-md border border-slate-200">
-                      {q.questionNumber}
-                    </span>
-                    <p className="text-xs sm:text-sm font-semibold text-slate-800">{q.question}</p>
-                    <p className="text-[11px] text-slate-500 italic">{q.subGuide}</p>
-                    <textarea
-                      rows={2}
-                      value={observation[q.field]}
-                      onChange={(e) => setObservation({ ...observation, [q.field]: e.target.value })}
-                      placeholder={q.placeholder}
-                      className="w-full p-2.5 text-xs sm:text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-400"
-                    />
-                  </div>
-                ))}
+                {DESKRIPSI_DETAIL_QUESTIONS.map((q) => {
+                  const isFilled = (observation[q.field] || '').trim().length > 0;
+                  const isHintOpen = !!openHints[q.id];
+                  const charLength = (observation[q.field] || '').length;
+
+                  return (
+                    <div
+                      key={q.id}
+                      className={`p-4 sm:p-5 rounded-2xl transition-all border ${
+                        isFilled ? 'bg-white border-emerald-300 ring-1 ring-emerald-100 shadow-2xs' : 'bg-slate-50/90 border-slate-200'
+                      }`}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${
+                            isFilled ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-white text-slate-700 border-slate-200'
+                          }`}>
+                            {q.questionNumber}
+                          </span>
+                          {isFilled && (
+                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                              <SvgIcon name="check" className="w-3 h-3 text-emerald-600" /> Terisi
+                            </span>
+                          )}
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => toggleHint(q.id)}
+                          className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1.5 border ${
+                            isHintOpen 
+                              ? 'bg-emerald-100 text-emerald-900 border-emerald-300' 
+                              : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border-emerald-200/80'
+                          }`}
+                        >
+                          <SvgIcon name="lightbulb" className="w-3.5 h-3.5 text-amber-500" />
+                          <span>{isHintOpen ? 'Tutup Tips' : 'Tips Scaffolding'}</span>
+                          <SvgIcon name={isHintOpen ? 'chevron-up' : 'chevron-down'} className="w-3 h-3 text-slate-500" />
+                        </button>
+                      </div>
+
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-800 mb-1">{q.question}</h4>
+                      <p className="text-[11px] text-slate-500 mb-3">{q.subGuide}</p>
+
+                      {/* Box Scaffolding / Tips */}
+                      {isHintOpen && (
+                        <div className="mb-3.5 p-3.5 rounded-xl bg-emerald-50/90 border border-emerald-200 text-xs space-y-2.5">
+                          <div>
+                            <div className="flex items-center gap-1.5 font-bold text-emerald-900 mb-1">
+                              <SvgIcon name="info" className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                              <span>Petunjuk Observasi Lapangan:</span>
+                            </div>
+                            <ul className="list-disc list-inside space-y-0.5 text-emerald-900/90 pl-1 text-[11px]">
+                              {q.hints.map((hint, idx) => (
+                                <li key={idx}>{hint}</li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div className="pt-2 border-t border-emerald-200/70">
+                            <span className="font-bold text-emerald-950 block text-[11px] mb-0.5">🔍 Contoh Fakta Lapangan:</span>
+                            <p className="text-slate-800 italic bg-white/80 p-2 rounded-lg border border-emerald-100 text-[11px]">
+                              "{q.example}"
+                            </p>
+                          </div>
+
+                          <div className="pt-2 border-t border-emerald-200/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                              <span className="font-bold text-emerald-950 block text-[11px] mb-0.5">✍️ Panduan Menulis Awal:</span>
+                              <p className="text-emerald-900 text-[11px]">
+                                {q.sentenceRule}
+                              </p>
+                            </div>
+                            {!observation[q.field] && (
+                              <button
+                                type="button"
+                                onClick={() => setObservation(prev => ({ ...prev, [q.field]: q.example }))}
+                                className="self-start sm:self-center shrink-0 text-[11px] font-medium text-emerald-700 hover:text-emerald-800 underline bg-white/90 px-2 py-1 rounded-md border border-emerald-200"
+                              >
+                                Gunakan Contoh
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Textarea */}
+                      <textarea
+                        rows={2}
+                        value={observation[q.field]}
+                        onChange={(e) => setObservation({ ...observation, [q.field]: e.target.value })}
+                        placeholder={q.placeholder}
+                        className="w-full p-2.5 text-xs sm:text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-400 resize-y"
+                      />
+                      <div className="flex justify-end items-center mt-1 px-1 text-[10px] text-slate-400">
+                        <span>{charLength > 0 ? `${charLength} karakter` : 'Belum diisi'}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -909,22 +1327,106 @@ ${paragraphs.paragrafDeskripsiManfaat || '-'}
                 </h3>
               </div>
               <div className="space-y-4">
-                {DESKRIPSI_MANFAAT_QUESTIONS.map((q) => (
-                  <div key={q.id} className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 space-y-1.5">
-                    <span className="text-[11px] font-bold text-emerald-800 bg-white px-2 py-0.5 rounded-md border border-slate-200">
-                      {q.questionNumber}
-                    </span>
-                    <p className="text-xs sm:text-sm font-semibold text-slate-800">{q.question}</p>
-                    <p className="text-[11px] text-slate-500 italic">{q.subGuide}</p>
-                    <textarea
-                      rows={2}
-                      value={observation[q.field]}
-                      onChange={(e) => setObservation({ ...observation, [q.field]: e.target.value })}
-                      placeholder={q.placeholder}
-                      className="w-full p-2.5 text-xs sm:text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-400"
-                    />
-                  </div>
-                ))}
+                {DESKRIPSI_MANFAAT_QUESTIONS.map((q) => {
+                  const isFilled = (observation[q.field] || '').trim().length > 0;
+                  const isHintOpen = !!openHints[q.id];
+                  const charLength = (observation[q.field] || '').length;
+
+                  return (
+                    <div
+                      key={q.id}
+                      className={`p-4 sm:p-5 rounded-2xl transition-all border ${
+                        isFilled ? 'bg-white border-emerald-300 ring-1 ring-emerald-100 shadow-2xs' : 'bg-slate-50/90 border-slate-200'
+                      }`}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${
+                            isFilled ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-white text-slate-700 border-slate-200'
+                          }`}>
+                            {q.questionNumber}
+                          </span>
+                          {isFilled && (
+                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                              <SvgIcon name="check" className="w-3 h-3 text-emerald-600" /> Terisi
+                            </span>
+                          )}
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => toggleHint(q.id)}
+                          className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1.5 border ${
+                            isHintOpen 
+                              ? 'bg-emerald-100 text-emerald-900 border-emerald-300' 
+                              : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border-emerald-200/80'
+                          }`}
+                        >
+                          <SvgIcon name="lightbulb" className="w-3.5 h-3.5 text-amber-500" />
+                          <span>{isHintOpen ? 'Tutup Tips' : 'Tips Scaffolding'}</span>
+                          <SvgIcon name={isHintOpen ? 'chevron-up' : 'chevron-down'} className="w-3 h-3 text-slate-500" />
+                        </button>
+                      </div>
+
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-800 mb-1">{q.question}</h4>
+                      <p className="text-[11px] text-slate-500 mb-3">{q.subGuide}</p>
+
+                      {/* Box Scaffolding / Tips */}
+                      {isHintOpen && (
+                        <div className="mb-3.5 p-3.5 rounded-xl bg-emerald-50/90 border border-emerald-200 text-xs space-y-2.5">
+                          <div>
+                            <div className="flex items-center gap-1.5 font-bold text-emerald-900 mb-1">
+                              <SvgIcon name="info" className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                              <span>Petunjuk Observasi Lapangan:</span>
+                            </div>
+                            <ul className="list-disc list-inside space-y-0.5 text-emerald-900/90 pl-1 text-[11px]">
+                              {q.hints.map((hint, idx) => (
+                                <li key={idx}>{hint}</li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div className="pt-2 border-t border-emerald-200/70">
+                            <span className="font-bold text-emerald-950 block text-[11px] mb-0.5">🔍 Contoh Fakta Lapangan:</span>
+                            <p className="text-slate-800 italic bg-white/80 p-2 rounded-lg border border-emerald-100 text-[11px]">
+                              "{q.example}"
+                            </p>
+                          </div>
+
+                          <div className="pt-2 border-t border-emerald-200/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                              <span className="font-bold text-emerald-950 block text-[11px] mb-0.5">✍️ Panduan Menulis Awal:</span>
+                              <p className="text-emerald-900 text-[11px]">
+                                {q.sentenceRule}
+                              </p>
+                            </div>
+                            {!observation[q.field] && (
+                              <button
+                                type="button"
+                                onClick={() => setObservation(prev => ({ ...prev, [q.field]: q.example }))}
+                                className="self-start sm:self-center shrink-0 text-[11px] font-medium text-emerald-700 hover:text-emerald-800 underline bg-white/90 px-2 py-1 rounded-md border border-emerald-200"
+                              >
+                                Gunakan Contoh
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Textarea */}
+                      <textarea
+                        rows={2}
+                        value={observation[q.field]}
+                        onChange={(e) => setObservation({ ...observation, [q.field]: e.target.value })}
+                        placeholder={q.placeholder}
+                        className="w-full p-2.5 text-xs sm:text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-400 resize-y"
+                      />
+                      <div className="flex justify-end items-center mt-1 px-1 text-[10px] text-slate-400">
+                        <span>{charLength > 0 ? `${charLength} karakter` : 'Belum diisi'}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -947,67 +1449,223 @@ ${paragraphs.paragrafDeskripsiManfaat || '-'}
             ------------------------------------------ */}
         {activeTab === 2 && (
           <div className="space-y-6 pb-12">
+            {/* Header Banner */}
             <div className="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-4 sm:p-6 text-white shadow-md">
-              <span className="inline-flex items-center gap-1 text-[11px] font-semibold bg-emerald-500/50 px-2.5 py-0.5 rounded-full border border-emerald-300/30">
-                <SvgIcon name="sparkles" className="w-3 h-3 text-emerald-200" /> Tahap 2: Scaffolding Kalimat Efektif
-              </span>
-              <h2 className="text-lg sm:text-xl font-bold mt-1">Perbaikan & Penyuntingan Kalimat (PUEBI/EYD)</h2>
-              <p className="text-xs sm:text-sm text-emerald-100 mt-1 max-w-2xl leading-relaxed">
-                Teks jawabanmu dari Tahap 1 ditampilkan di sini. Ubahlah jawaban mentah tersebut menjadi kalimat baku yang efektif, menggunakan kata kopula (adalah, merupakan) dan konjungsi yang tepat.
-              </p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold bg-emerald-500/50 px-2.5 py-0.5 rounded-full border border-emerald-300/30">
+                    <SvgIcon name="sparkles" className="w-3 h-3 text-emerald-200" /> Tahap 2: Scaffolding Kalimat Efektif
+                  </span>
+                  <h2 className="text-lg sm:text-xl font-bold mt-1">Perbaikan & Penyuntingan Kalimat (PUEBI/EYD)</h2>
+                  <p className="text-xs sm:text-sm text-emerald-100 max-w-2xl leading-relaxed">
+                    Jawaban mentahmu dari Tahap 1 ditampilkan di sini. Ubahlah jawaban mentah menjadi kalimat baku yang efektif menggunakan kata kopula, kata pengelompokan, serta konjungsi yang tepat.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSyncAllFromRaw}
+                  className="self-start sm:self-auto shrink-0 px-3.5 py-2 rounded-xl bg-white text-emerald-800 font-bold text-xs shadow-xs hover:bg-emerald-50 transition-colors flex items-center gap-1.5"
+                  title="Salin semua jawaban dari Tahap 1 yang belum diisi"
+                >
+                  <SvgIcon name="copy" className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Salin Semua dari Tahap 1</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Kotak Pemandu Kaidah PUEBI/EYD & Bank Konjungsi */}
+            <div className="bg-white rounded-2xl border border-emerald-200 p-4 sm:p-5 shadow-2xs space-y-3">
+              <div className="flex items-center gap-2 text-slate-800">
+                <SvgIcon name="lightbulb" className="w-4 h-4 text-amber-500" />
+                <h3 className="font-bold text-xs sm:text-sm">
+                  Kaidah Cepat Kalimat Efektif & Bank Kata Penghubung Teks LHO
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
+                <div className="p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-100">
+                  <span className="font-bold text-emerald-900 block text-[11px]">1. Verba Kopula (Definisi)</span>
+                  <p className="text-emerald-800 text-[11px] mt-0.5">Wajib kata: <strong>adalah, merupakan, ialah</strong></p>
+                </div>
+                <div className="p-2.5 rounded-xl bg-teal-50/70 border border-teal-100">
+                  <span className="font-bold text-teal-900 block text-[11px]">2. Verba Klasifikasi</span>
+                  <p className="text-teal-800 text-[11px] mt-0.5">Gunakan: <strong>termasuk dalam, tergolong ke dalam</strong></p>
+                </div>
+                <div className="p-2.5 rounded-xl bg-blue-50/70 border border-blue-100">
+                  <span className="font-bold text-blue-900 block text-[11px]">3. Konjungsi Antarkalimat</span>
+                  <p className="text-blue-800 text-[11px] mt-0.5">Awali dengan: <strong>Selain itu,, Di samping itu,, Selanjutnya,</strong></p>
+                </div>
+                <div className="p-2.5 rounded-xl bg-amber-50/70 border border-amber-100">
+                  <span className="font-bold text-amber-900 block text-[11px]">⚠️ Konjungsi Terlarang</span>
+                  <p className="text-amber-800 text-[11px] mt-0.5">Jangan di awal kalimat: <em>Dan, Sehingga, Karena, Tetapi</em></p>
+                </div>
+              </div>
+            </div>
+
+            {/* Filter Tab Kategori Soal */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+              {[
+                { id: 'all', label: 'Semua Soal (13)' },
+                { id: 'pu', label: 'I. Pernyataan Umum (5)' },
+                { id: 'db', label: 'II. Deskripsi Bagian (5)' },
+                { id: 'dm', label: 'III. Deskripsi Manfaat (3)' },
+              ].map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setTab2Category(cat.id as any)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                    tab2Category === cat.id
+                      ? 'bg-emerald-600 text-white shadow-2xs'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
             </div>
 
             {/* List Perbaikan Kalimat */}
             <div className="space-y-4">
-              {[...PERNYATAAN_UMUM_QUESTIONS, ...DESKRIPSI_DETAIL_QUESTIONS, ...DESKRIPSI_MANFAAT_QUESTIONS].map((q) => {
-                const rawAnswer = observation[q.field];
-                return (
-                  <div key={q.id} className="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                        {q.questionNumber}: {q.sentencePrompt}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setSentences({ ...sentences, [q.field]: q.sentenceSuggestion })}
-                        className="text-[11px] font-medium text-emerald-700 hover:text-emerald-800 underline"
-                      >
-                        Pakai Contoh Kalimat
-                      </button>
-                    </div>
+              {[...PERNYATAAN_UMUM_QUESTIONS, ...DESKRIPSI_DETAIL_QUESTIONS, ...DESKRIPSI_MANFAAT_QUESTIONS]
+                .filter((q) => {
+                  if (tab2Category === 'pu') return PERNYATAAN_UMUM_QUESTIONS.some((item) => item.id === q.id);
+                  if (tab2Category === 'db') return DESKRIPSI_DETAIL_QUESTIONS.some((item) => item.id === q.id);
+                  if (tab2Category === 'dm') return DESKRIPSI_MANFAAT_QUESTIONS.some((item) => item.id === q.id);
+                  return true;
+                })
+                .map((q) => {
+                  const rawAnswer = observation[q.field] || '';
+                  const currentSentence = sentences[q.field] || '';
+                  const quality = checkSentenceQuality(currentSentence);
+                  const isCopied = copiedSentenceId === q.field;
 
-                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs">
-                      <span className="font-semibold text-slate-500 block text-[10px] uppercase">Jawaban Mentah (Tahap 1):</span>
-                      <p className="text-slate-700 mt-0.5 italic">
-                        {rawAnswer || '(Belum ada jawaban pada Tahap 1)'}
-                      </p>
-                    </div>
+                  return (
+                    <div
+                      key={q.id}
+                      className={`bg-white rounded-2xl border p-4 sm:p-5 shadow-2xs space-y-3.5 transition-all ${
+                        quality.isClean ? 'border-emerald-300 ring-1 ring-emerald-100' : 'border-slate-200'
+                      }`}
+                    >
+                      {/* Top Bar Kartu */}
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                            {q.questionNumber}: {q.sentencePrompt}
+                          </span>
+                          <span className="text-xs text-slate-500 font-medium hidden sm:inline">
+                            • {q.question}
+                          </span>
+                        </div>
+                        {quality.isClean && (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                            <SvgIcon name="check-circle" className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Kalimat Efektif</span>
+                          </span>
+                        )}
+                      </div>
 
-                    <div>
-                      <label className="block text-slate-700 font-semibold mb-1 text-xs">
-                        Kalimat Efektif Hasil Suntingan:
-                      </label>
-                      <textarea
-                        rows={2}
-                        value={sentences[q.field]}
-                        onChange={(e) => setSentences({ ...sentences, [q.field]: e.target.value })}
-                        placeholder={`Contoh: ${q.sentenceSuggestion}`}
-                        className="w-full p-2.5 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-400"
-                      />
+                      {/* Jawaban Mentah (Tahap 1) */}
+                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                        <div className="flex items-center justify-between text-slate-500 mb-1">
+                          <span className="font-semibold text-[11px] uppercase tracking-wide">
+                            Jawaban Mentah (Tahap 1):
+                          </span>
+                          {rawAnswer ? (
+                            <button
+                              type="button"
+                              onClick={() => copyRawToSentence(q.field, rawAnswer)}
+                              className="text-[11px] font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 transition-colors"
+                            >
+                              <SvgIcon name="copy" className="w-3 h-3 text-emerald-600" />
+                              <span>{isCopied ? 'Tersalin!' : 'Salin ke Suntingan'}</span>
+                            </button>
+                          ) : null}
+                        </div>
+                        <p className="text-slate-800 italic">
+                          {rawAnswer ? `"${rawAnswer}"` : '(Belum diisi pada Tahap 1 - kamu bisa langsung mengetik kalimat di bawah)'}
+                        </p>
+                      </div>
+
+                      {/* Kotak Tips Scaffolding Kaidah Kalimat */}
+                      <div className="p-3 rounded-xl bg-emerald-50/80 border border-emerald-100 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                        <div className="space-y-0.5">
+                          <span className="font-bold text-emerald-950 block text-[11px]">
+                            💡 Kaidah Kalimat Efektif:
+                          </span>
+                          <p className="text-emerald-900 text-[11px] leading-relaxed">
+                            {q.sentenceRule}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => applySmartScaffold(q)}
+                          className="self-start sm:self-center shrink-0 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 shadow-2xs transition-colors"
+                          title="Rangkai otomatis jawabanmu ke dalam kalimat efektif baku"
+                        >
+                          <SvgIcon name="sparkles" className="w-3 h-3 text-emerald-200" />
+                          <span>Terapkan Pola Efektif</span>
+                        </button>
+                      </div>
+
+                      {/* Kolom Suntingan Siswa */}
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-slate-700 font-semibold text-xs">
+                            Kalimat Efektif Hasil Suntinganmu:
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => setSentences(prev => ({ ...prev, [q.field]: q.sentenceSuggestion }))}
+                            className="text-[11px] text-emerald-700 hover:text-emerald-800 underline font-medium"
+                          >
+                            Pakai Contoh Baku
+                          </button>
+                        </div>
+                        <textarea
+                          rows={2}
+                          value={currentSentence}
+                          onChange={(e) => setSentences({ ...sentences, [q.field]: e.target.value })}
+                          placeholder={`Contoh baku: ${q.sentenceSuggestion}`}
+                          className="w-full p-2.5 text-xs sm:text-sm bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-400 resize-y"
+                        />
+
+                        {/* Indikator Cek Kualitas Kalimat Otomatis (Live Feedback) */}
+                        <div className="flex flex-wrap items-center gap-1.5 pt-1.5 text-[10px]">
+                          <span className={`px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                            quality.startsCap ? 'bg-emerald-100 text-emerald-800 font-semibold' : 'bg-slate-100 text-slate-500'
+                          }`}>
+                            {quality.startsCap ? '✓' : '•'} Huruf Kapital Awal
+                          </span>
+                          <span className={`px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                            quality.endsDot ? 'bg-emerald-100 text-emerald-800 font-semibold' : 'bg-slate-100 text-slate-500'
+                          }`}>
+                            {quality.endsDot ? '✓' : '•'} Tanda Titik Akhir (.)
+                          </span>
+                          <span className={`px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                            quality.noBadConjunction ? 'bg-emerald-100 text-emerald-800 font-semibold' : 'bg-rose-100 text-rose-800 font-bold'
+                          }`}>
+                            {quality.noBadConjunction ? '✓' : '✗'} Bukan Konjungsi Terlarang di Awal
+                          </span>
+                          <span className={`px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                            quality.lengthOk ? 'bg-emerald-100 text-emerald-800 font-semibold' : 'bg-slate-100 text-slate-500'
+                          }`}>
+                            {quality.lengthOk ? '✓' : '•'} Panjang Kalimat ({currentSentence.length} kar)
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setActiveTab(1)}
-                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-xs flex items-center justify-center gap-1.5"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-xs flex items-center justify-center gap-1.5 hover:bg-slate-50"
               >
                 <SvgIcon name="arrow-left" className="w-4 h-4" />
-                <span>Kembali ke Tahap 1</span>
+                <span>Kembali ke Tahap 1 (Observasi)</span>
               </button>
               <button
                 type="button"
@@ -1027,13 +1685,67 @@ ${paragraphs.paragrafDeskripsiManfaat || '-'}
         {activeTab === 3 && (
           <div className="space-y-6 pb-12">
             <div className="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-4 sm:p-6 text-white shadow-md">
-              <span className="inline-flex items-center gap-1 text-[11px] font-semibold bg-emerald-500/50 px-2.5 py-0.5 rounded-full border border-emerald-300/30">
-                <SvgIcon name="sparkles" className="w-3 h-3 text-emerald-200" /> Tahap 3: Konstruksi Paragraf Padu
-              </span>
-              <h2 className="text-lg sm:text-xl font-bold mt-1">Penggabungan & Penyusunan Paragraf LHO</h2>
-              <p className="text-xs sm:text-sm text-emerald-100 mt-1 max-w-2xl leading-relaxed">
-                Rangkai kalimat-kalimat efektif dari Tahap 2 menjadi 3 paragraf utuh berkohesi dan berkoherensi tinggi. Kamu bisa menggunakan tombol "Rangkai Otomatis" lalu menyempurnakannya.
-              </p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold bg-emerald-500/50 px-2.5 py-0.5 rounded-full border border-emerald-300/30">
+                    <SvgIcon name="sparkles" className="w-3 h-3 text-emerald-200" /> Tahap 3: Konstruksi Paragraf Padu
+                  </span>
+                  <h2 className="text-lg sm:text-xl font-bold mt-1">Penggabungan & Penyusunan Paragraf LHO</h2>
+                  <p className="text-xs sm:text-sm text-emerald-100 max-w-2xl leading-relaxed">
+                    Rangkai kalimat-kalimat efektif dari Tahap 2 menjadi 3 paragraf utuh berkohesi dan berkoherensi tinggi. Kamu bisa menggunakan tombol "Rangkai Otomatis" lalu menyempurnakannya.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRangkaiSemuaParagraf}
+                  className="self-start sm:self-auto shrink-0 px-4 py-2.5 rounded-xl bg-white text-emerald-800 font-bold text-xs sm:text-sm shadow-xs hover:bg-emerald-50 transition-all flex items-center gap-1.5 active:scale-95"
+                >
+                  <SvgIcon name="sparkles" className="w-4 h-4 text-emerald-600" />
+                  <span>Rangkai Semua Paragraf</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Kotak Bank Konjungsi Antarkalimat Pemandu */}
+            <div className="bg-white rounded-2xl border border-emerald-200 p-4 shadow-2xs space-y-2">
+              <div className="flex items-center gap-2 text-slate-800">
+                <SvgIcon name="lightbulb" className="w-4 h-4 text-amber-500" />
+                <h3 className="font-bold text-xs sm:text-sm">
+                  Bank Konjungsi Antarkalimat Pemandu (Klik untuk menyalin kata penghubung):
+                </h3>
+              </div>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {[
+                  'Selain itu,',
+                  'Di samping itu,',
+                  'Sementara itu,',
+                  'Sebaliknya,',
+                  'Selanjutnya,',
+                  'Kemudian,',
+                  'Dengan demikian,',
+                  'Oleh karena itu,',
+                  'Secara keseluruhan,',
+                ].map((word) => (
+                  <button
+                    key={word}
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(word);
+                        setCopiedChip(word);
+                        setTimeout(() => setCopiedChip(null), 1500);
+                      } catch {
+                        // fallback
+                      }
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold transition-all active:scale-95 flex items-center gap-1"
+                    title="Klik untuk menyalin"
+                  >
+                    <span>{word}</span>
+                    {copiedChip === word && <span className="text-[10px] text-emerald-600 font-bold">✓ Tersalin</span>}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Judul Laporan */}
